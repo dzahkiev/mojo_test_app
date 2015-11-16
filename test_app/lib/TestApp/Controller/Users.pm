@@ -7,7 +7,7 @@ use Mojo::Upload;
 use strict;
 use Mojo::UserAgent;
 use feature qw(say switch);
-
+use Mojo::JSON qw(decode_json encode_json); 
  
 
 sub auth {
@@ -40,21 +40,12 @@ sub delete {
 
 
 sub auth_form {
-  my ( $self ) = @_ ; 
+  my ( $self ) = @_; 
   $self->stash(user => ''); 
   $self->session('login') ? $self->redirect_to('/users') :  $self->render( msg => 'Login form' ); 
 }
 
-
-sub apilist {
-  my ( $self ) = @_ ; 
-  my $ua = Mojo::UserAgent->new;
-say $ua->get('www.google.com')->res->dom->at('title')->text;
-say "hello!!!!";
-$self->redirect_to('/users');
-
-} 
-
+ 
 sub list {
   my ( $self ) = @_ ; 
   my $dbh = connectBD();
@@ -77,9 +68,55 @@ sub list {
 	  $i++;
   }
  unconnectBD( $sth, $dbh ); 
- $self->render( msg => 'Users  list', k => $users, searching_string => $searching_string );
+
+  $self->render( msg => 'Users  list', k => $users, searching_string => $searching_string );
+ 
+}
+
+
+sub test {
+  my ( $self ) = @_;  
+  my $ua = Mojo::UserAgent->new;    
+  say $ua->get('/api/users')->res->dom;
+  $self->redirect_to('/api/users');
 
 }
+ 
+sub apilist {
+  my ( $self ) = @_ ; 
+  my $dbh = connectBD();
+  my $query;
+  my $searching_string = $self->param( 'search_str' );
+
+  if ( $searching_string ) {
+    $query =  "SELECT * FROM users WHERE MATCH (name, email) AGAINST ( ? )" ;
+  }
+  else {
+    $query =  "SELECT * FROM users" ;
+  } 
+  my $sth = $dbh->prepare( $query );
+  ($searching_string) ? $sth->execute("$searching_string") : $sth->execute(); 
+  
+  my $users;
+  my $i = 0;
+  while ( my $ref = $sth->fetchrow_hashref ) {
+    $users->{$i} = $ref;
+    $i++;
+  }
+ unconnectBD( $sth, $dbh );  
+  my $str;
+  my $i=1;
+  $str->[0] = {status => 'ok'};
+for (sort keys $users) {
+  $str->[$i] = $users->{$_};
+  $i++;
+}
+  $users = encode_json  $str ;   
+  say $users;
+  $self->render( msg => 'Users list JSON', k => $users, searching_string => $searching_string );
+
+ }
+ 
 
 
 sub form {

@@ -7,8 +7,7 @@
   </head>
   <body>
 <% 
-my $auth_user =  user ($user); 
-if ($user) { %>
+if ( my $auth_user =  user (stash 'user') )  { %>
 <div align="center"><b> Welcome, <%= $auth_user->{name} %> </b>
 <a href="/logout"><b>Logout</b></a>
 </div> 

@@ -17,7 +17,7 @@ sub startup {
  $r->any('/logout')->to( 'users#delete' ); 
  $r->any('/create')->to( 'users#create' ); 
  $r->any('/api/users')->to( 'users#apilist' );
-
+ $r->any('/api/users/test')->to( 'users#test' );
 
   my $auth = $r->under( '/' )->to('users#auth');
 
