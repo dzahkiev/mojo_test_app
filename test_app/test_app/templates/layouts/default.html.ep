@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title><%= title %></title>
+  	<meta charset="utf8">
+  	<link rel='stylesheet' href='/css/bootstrap.min.css' type='text/css' media='all'>
+  </head>
+  <body>
+<ul class="nav nav-pills">
+<li ><a href="/users"><b>Users</b></a></li> 
+<li><a href="/users/add"><span class="glyphicon glyphicon-plus"><b>Add</b></span></a></li>
+</ul>
+  	<%= content %></body>
+</html>
