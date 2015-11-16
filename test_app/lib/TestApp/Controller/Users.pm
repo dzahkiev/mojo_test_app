@@ -98,20 +98,15 @@ sub apilist {
   ($searching_string) ? $sth->execute("$searching_string") : $sth->execute(); 
   
   my $users;
-  my $i = 0;
+  my $i = 1;
+  $users->[0] = {status => 'ok'};
   while ( my $ref = $sth->fetchrow_hashref ) {
-    $users->{$i} = $ref;
+    $users->[$i]  = $ref;
     $i++;
   }
  unconnectBD( $sth, $dbh );  
-  my $str;
-  my $i=1;
-  $str->[0] = {status => 'ok'};
-for (sort keys $users) {
-  $str->[$i] = $users->{$_};
-  $i++;
-}
-  $users = encode_json  $str ;   
+  
+  $users = encode_json  $users ;   
   say $users;
   $self->render( msg => 'Users list JSON', k => $users, searching_string => $searching_string );
 
