@@ -1,16 +1,32 @@
-% layout 'default';
+% layout 'default'; 
+
 <div class = "page-header">
 <h4><%= $msg %></43>
 </div>
+<form action="/users/search" method="post" name="search_form">
+	<input type="text" name="search_str" value="<%= $searching_string %>">
+	<button type="submit" name="search" value="search">Search</button>
+</form>
+<br>
 <% if (my $message = flash 'message' ) { %>
 <div class="alert alert-success ">
    <%= $message %>
 </div>
      <% } %>
+ 
 
+
+
+<% unless ($k) { %> 
+<div class="alert alert-warning ">
+   No data selected!
+</div>
+<% } else { %>
 <table class="table table-striped table-bordered table-hover table-condensed table-bordered"   >
 	<tr>
 		<th>ID</th>
+		<th>Name</th>
+		<th>Photo</th>
 		<th>E-mail</th>
 		<th>Password</th>
 		<th>Money</th>
@@ -21,9 +37,15 @@
 		<th>Remove</th>
 	</tr>
 
- % for ( sort keys %$k) {
+ <% for ( sort keys %$k) { %>
 	 <tr>
 	 <td><%= $k->{$_}{id} %></td>
+	 <td><%= $k->{$_}{name} %></td>
+	 <td>
+	 	% if ( $k->{$_}{photo} ) {
+	 		<img src = "/img/<%= $k->{$_}{photo} %>"  width = "80px"/>
+	 	% }
+	 </td>
 	 <td><%= $k->{$_}{email} %></td>
 	 <td><%= $k->{$_}{pass} %></td>
 	 <td><%= $k->{$_}{money} %></td>
@@ -34,7 +56,7 @@
 	 <td align="center"><a href = "users/<%=$k->{$_}{id}%>/remove"><span class="glyphicon glyphicon-remove"></span></a></td>
 	 </tr>
 
- %}
+<% } }%>
 
 
 

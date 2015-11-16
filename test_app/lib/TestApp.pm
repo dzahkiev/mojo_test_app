@@ -7,19 +7,28 @@ sub startup {
 
   # Documentation browser under "/perldoc"
   $self->plugin('PODRenderer');
+  $self->plugin('App::Helpers');
 
   # Router
   my $r = $self->routes;
+   
+ $r->any('/')->to( 'users#auth_form' );
+ $r->any('/login')->to( 'users#auth_form' );
+ $r->any('/logout')->to( 'users#delete' ); 
+ $r->any('/create')->to( 'users#create' ); 
+ $r->any('/api/users')->to( 'users#apilist' );
 
-  # Normal route to controller 
- $r->get('/')->to( 'users#list' );
- $r->get('/users')->to( 'users#list' );
- $r->get('/users/add')->to( 'users#form' );
- $r->post('/users/add')->to( 'users#form' );
- $r->get('/users/:ID/edit')->to( 'users#form' );
- $r->get('/users/:ID/remove')->to( 'users#remove' );
- $r->get('/users/:ID/edit')->to( 'users#form' );
- $r->post('/users/:ID/edit')->to( 'users#form' );
+
+  my $auth = $r->under( '/' )->to('users#auth');
+
+  # Normal route to controller  
+ 
+ $auth->get('/users')->to( 'users#list' ); 
+ $auth->any('/users/add')->to( 'users#form' ); 
+ $auth->any('/users/:ID/edit')->to( 'users#form' ); 
+ $auth->get('/users/:ID/remove')->to( 'users#remove' );
+ $auth->post('/users/search')->to( 'users#list' );
+
 
  
  
