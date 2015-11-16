@@ -13,7 +13,7 @@ use feature qw(say switch);
 sub auth {
   my ( $self ) = @_ ;
   $self->stash(user => $self->session('login') ); 
-  $self->logged( user => $self->session('login') ); 
+  $self->logged( user => $self->session('login') );  
 }
 
 
