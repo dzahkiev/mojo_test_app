@@ -16,16 +16,16 @@ sub startup {
   # Router
   my $r = $self->routes;
    
- $r->any('/')->to( 'auth#form' );
- $r->any('/login')->to( 'auth#form' );
- $r->any('/logout')->to( 'auth#delete' ); 
+ $r->get('/')->to( 'auth#form' );
+ $r->get('/login')->to( 'auth#form' );
+ $r->get('/logout')->to( 'auth#delete' ); 
  $r->any('/create')->to( 'auth#create' ); 
 
  $r->any('/api/users')->to( 'users#apilist' );
  $r->any('/api/users/test')->to( 'users#test' );
 
- $r->any('/square')->to( 'ws#square' );
- $r->any('/btn')->to( 'ws#btn' );
+ $r->get('/square')->to( 'ws#square' );
+ $r->get('/btn')->to( 'ws#btn' );
  $r->websocket('/change')->to( 'ws#change_color' );
 
 
