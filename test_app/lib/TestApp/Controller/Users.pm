@@ -31,13 +31,14 @@ sub form {
     $self->render( msg => 'Editing user', btn_text => 'Save', fields => $users, link => $link );
  }
   elsif ( $self->param( 'submit' ) ) {
-  	my $param;
-  	$param->{0}{email} = $self->param( 'email' );
-    $param->{0}{name} = $self->param( 'name' );
-  	$param->{0}{password} = $self->param( 'password' );
-  	$param->{0}{money} = $self->param( 'money' ) || 0;
-  	$param->{0}{sex} = $self->param( 'sex' );
-  	$param->{0}{created} = $self->param( 'created' ); 
+  	my @param;
+
+    $param[0] = $self->param( 'name' );
+  	$param[1] = $self->param( 'email' );
+  	$param[2] = $self->param( 'password' );    
+    $param[3] = $self->param( 'sex' );
+  	$param[4] = $self->param( 'money' ) || 0;
+  	$param[5] = $self->param( 'created' ); 
     $param->{email}{valid} = check_email ($param->{0}{email});
     $param->{password}{valid} = check_password ( $param->{0}{password} );
     $param->{date}{valid} = check_date ( $param->{0}{created} );
@@ -50,18 +51,19 @@ sub form {
         $i++;
         $filename = $` . "-00$i" . $&; 
       }
-    $param->{0}{photo} = $filename;
+       $upload->move_to( "public/img/$filename" );
+       $param[6] = $filename || '';
     }
 
-   my $valid = check_email_password( $param->{0}{email}, $param->{0}{password}, $param->{0}{created} ); 
+   my $valid = check_email_password( @param[1,2,5] ); 
     if ( !$self->param( 'ID' ) ) {
-    ( $valid = 0, $param->{ email}{valid} = 0 ) if is_exist_email( $self, $param->{0}{email} );
+    ( $valid = 0, $param->{email}{valid} = 0 ) if is_exist_email( $self, $param[1] );
     }
      
 if ( $valid ) {
   	my $query;
     my $id = $self->param( 'ID' );
-    $upload->move_to( "public/img/$filename" );
+
     if ( $id ) {
        $query =  "UPDATE users SET name = ? , email = ? , pass = MD5(?) , sex = ? , money = ? , created = ?, photo = ?  WHERE id = $id"; 
   } 
@@ -70,7 +72,7 @@ if ( $valid ) {
                       VALUES ( ?, ?, MD5(?), ?, ?, ?, ? ) ";                      
   }
 
-  	my $res = $self->execute_qw($query, $param->{0}{name}, $param->{0}{email}, $param->{0}{password}, $param->{0}{sex}, $param->{0}{money}, $param->{0}{created},  $param->{0}{photo}//''); 
+  	my $res = $self->execute_qw($query, @param); 
 	 	 
     my $message;
     if ($res) {
@@ -133,6 +135,7 @@ sub  remove {
   $self->delete_user( $id );
   $self->flash( message => 'The user was removed!' );
 	$self->redirect_to( 'users' ); 
+
  }
 
 
