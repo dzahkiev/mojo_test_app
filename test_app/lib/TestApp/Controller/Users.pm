@@ -12,18 +12,18 @@ use Mojo::JSON qw(decode_json encode_json);
 
 sub auth {
   my ( $self ) = @_ ;
-  $self->stash(user => $self->session('login') ); 
-  $self->logged( user => $self->session('login') );  
+  $self->stash(user => $self->session( 'login' ) ); 
+  $self->logged( user => $self->session( 'login' ) );  
 }
 
 
 sub create {
   my ( $self ) = @_ ; 
-  my $login  = $self->param('login'); 
-  my $password = md5_hex( $self->param('password') ); 
+  my $login  = $self->param( 'login' ); 
+  my $password = md5_hex( $self->param( 'password' ) ); 
   if ( is_log( $login, $password ) ) {
     $self->session (login => $login);
-    $self->redirect_to('/users');
+    $self->redirect_to( '/users' );
   }
   else {
      $self->flash( error => 'Wrong password or user!' );
@@ -35,14 +35,14 @@ sub create {
 sub delete {
   my ( $self ) = @_ ; 
   $self->session (login => ''); 
-  $self->redirect_to('/login');
+  $self->redirect_to( '/login' );
 }
 
 
 sub auth_form {
   my ( $self ) = @_; 
   $self->stash(user => ''); 
-  $self->session('login') ? $self->redirect_to('/users') :  $self->render( msg => 'Login form' ); 
+  $self->session( 'login' ) ? $self->redirect_to( '/users' ) :  $self->render( msg => 'Login form' ); 
 }
 
  
@@ -59,7 +59,7 @@ sub list {
     $query =  "SELECT * FROM users" ;
   } 
   my $sth = $dbh->prepare( $query );
-  ($searching_string) ? $sth->execute("$searching_string") : $sth->execute(); 
+  ($searching_string) ? $sth->execute( "$searching_string" ) : $sth->execute(); 
   
   my $users;
   my $i = 0;
@@ -77,8 +77,8 @@ sub list {
 sub test {
   my ( $self ) = @_;  
   my $ua = Mojo::UserAgent->new;    
-  say $ua->get('/api/users')->res->dom;
-  $self->redirect_to('/api/users');
+  say $ua->get( '/api/users' )->res->dom;
+  $self->redirect_to( '/api/users' );
 
 }
  
@@ -95,13 +95,13 @@ sub apilist {
     $query =  "SELECT * FROM users" ;
   } 
   my $sth = $dbh->prepare( $query );
-  ($searching_string) ? $sth->execute("$searching_string") : $sth->execute(); 
+  ($searching_string) ? $sth->execute( "$searching_string" ) : $sth->execute(); 
   
   my $users;
   my $i = 1;
-  $users->[0] = {status => 'ok'};
+  $users->[0] = { status => 'ok' };
   while ( my $ref = $sth->fetchrow_hashref ) {
-    $users->[$i]  = $ref;
+    $users->[$i] = $ref;
     $i++;
   }
  unconnectBD( $sth, $dbh );  
@@ -114,6 +114,39 @@ sub apilist {
  
 
 
+sub square {
+  my ( $self ) = @_ ; 
+  $self->render();
+}
+
+sub btn {
+  my ( $self ) = @_ ; 
+  $self->render();
+}
+
+
+my $client;
+my $i = 0;
+
+sub change_color {
+my $self = shift ;  
+$client->{$i} = $self->tx;
+$i++;
+
+$self->on( message => sub {
+  my ( $self, $msg ) = @_;  
+  my @color_char = ( 0..9, 'A'..'F' );
+  my $color = '#';
+  for ( 1..6 ) {
+    $color .= @color_char[ rand scalar @color_char ];
+  }
+  for ( keys $client ) {
+     $client->{$_}->send( $color );
+  }
+ });
+}
+
+
 sub form {
   my ( $self ) = @_;   
   my $link;
@@ -124,7 +157,7 @@ sub form {
     my $users->{0} = $sth->fetchrow_hashref;  
     $users->{email}{valid} = 1; 
     $users->{date}{valid} = check_date ($users->{0}{created});
-    $link = "/users/".$self->param( 'ID' )."/edit";
+    $link = "/users/" . $self->param( 'ID' ) . "/edit";
     $self->render( msg => 'Editing user', btn_text => 'Save', fields => $users, link => $link );
     unconnectBD( $sth, $dbh );
   }
@@ -141,15 +174,15 @@ sub form {
     $param->{password}{valid} = check_password ( $param->{0}{password} );
     $param->{date}{valid} = check_date ( $param->{0}{created} );
 
-    my $upload = $self->req->upload('uploadImage');
+    my $upload = $self->req->upload( 'uploadImage' );
     my $filename = $upload->filename;  
-    if ($filename =~/\.(?:jpe?g|png)$/i) {
+    if ( $filename =~/\.(?:jpe?g|png)$/i ) {
       my $i;
-      while (-e "public/img/$filename") {
+      while (-e "public/img/$filename" ) {
         $i++;
-        $filename = $` ."-00$i" . $&; 
+        $filename = $` . "-00$i" . $&; 
       }
-       $upload->move_to("public/img/$filename");
+       $upload->move_to( "public/img/$filename" );
        $param->{0}{photo} = $filename;
     }
 
@@ -212,25 +245,25 @@ sub unconnectBD {
 }
 
 sub check_email_password {
-	my ($email, $password, $date) = @_; 
-	( check_email($email) && check_password($password) && check_date($date)) ? return 1 :	return 0;
+	my ( $email, $password, $date ) = @_; 
+	( check_email( $email ) && check_password( $password ) && check_date( $date ) ) ? return 1 :	return 0;
 	
 } 
 
 sub check_email {
   my $email = shift;
-  ($email =~/^([a-z0-9_-]+\.*)*@[a-z0-9_-]+\.[a-z]{2,6}$/i) ? return 1 : return 0;
+  ( $email =~/^([a-z0-9_-]+\.*)*@[a-z0-9_-]+\.[a-z]{2,6}$/i ) ? return 1 : return 0;
 
 }
 
 sub check_password {
   my $password = shift;
-  ($password =~/^[a-zA-Z0-9]{6,}$/i) ? return 1 : return 0;
+  ( $password =~/^[a-zA-Z0-9]{6,}$/i ) ? return 1 : return 0;
 }
 
 sub check_date {
   my $date = shift;
-  ($date =~/^(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})$/i) ? return 1 : return 0;
+  ( $date =~/^(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})$/i ) ? return 1 : return 0;
 }
 
 
@@ -248,7 +281,7 @@ sub is_log {
   my ($login, $password)  = @_; 
   my $dbh = connectBD(); 
   my $sth = $dbh->prepare( "SELECT * FROM users WHERE email = ? AND pass = ?" );
-  $sth->execute($login, $password); 
+  $sth->execute( $login, $password ); 
   my @res = $sth->fetchrow_array;
   unconnectBD( $sth, $dbh ); 
   return scalar @res;
@@ -260,7 +293,7 @@ sub get_user {
   my $login  = shift; 
   my $dbh = connectBD(); 
   my $sth = $dbh->prepare( "SELECT * FROM users WHERE email = ? " );
-  $sth->execute($login); 
+  $sth->execute( $login ); 
   my $res->{0} = $sth->fetchrow_hashref;
   unconnectBD( $sth, $dbh ); 
   return  $res;
@@ -271,11 +304,11 @@ sub  remove {
 	my $self = shift;
 	my $id = $self->param( 'ID' );
   my $dbh = connectBD(); 
- 	my $sth = $dbh->prepare("DELETE FROM users WHERE id = ?");
+ 	my $sth = $dbh->prepare( "DELETE FROM users WHERE id = ?" );
   $sth->execute($id);
   unconnectBD( $sth, $dbh );
   $self->flash( message => 'The user was removed!' );
-	$self->redirect_to( 'users'); 
+	$self->redirect_to( 'users' ); 
  }
 
 

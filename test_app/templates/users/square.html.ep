@@ -1,0 +1,29 @@
+% layout 'default'; 
+ 
+
+<style>
+#square {
+	width: 250px;
+	height: 250px;
+	background-color: green; 
+}
+</style>
+
+
+<div id="square">
+
+</div>
+
+
+<script>
+var socket = new WebSocket("ws://127.0.0.1:3000/change");
+
+socket.onopen = function() {
+  alert("Ok!");
+};
+socket.onmessage = function(event) {
+	document.getElementById('square').style.backgroundColor = event.data;
+	document.getElementById('square').innerHTML = "Color: " + event.data; 
+};
+
+</script>

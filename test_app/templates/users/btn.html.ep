@@ -1,0 +1,17 @@
+% layout 'default'; 
+ 
+<br>
+<button name="btn" onclick = "socket.send('')" >Set rand color</button>
+
+
+
+<script>
+var socket = new WebSocket("ws://127.0.0.1:3000/change");
+
+socket.onopen = function() {
+  alert("Ok!");
+}; 
+
+
+</script>
+

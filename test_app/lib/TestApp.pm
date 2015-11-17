@@ -18,6 +18,10 @@ sub startup {
  $r->any('/create')->to( 'users#create' ); 
  $r->any('/api/users')->to( 'users#apilist' );
  $r->any('/api/users/test')->to( 'users#test' );
+ $r->any('/square')->to( 'users#square' );
+ $r->any('/btn')->to( 'users#btn' );
+ $r->websocket('/change')->to( 'users#change_color' );
+
 
   my $auth = $r->under( '/' )->to('users#auth');
 
