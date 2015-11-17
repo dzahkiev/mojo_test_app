@@ -1,43 +1,41 @@
 package TestApp;
-use base Mojolicious;
+use base Mojolicious; 
+use DBI;  
+
 
 # This method will run once at server start
 sub startup {
   my $self = shift;
+ 
+  $self->plugin('App::Helpers');  
+  $self->plugin('App::DBhelpers');   
+  $self->db;
+        
 
-  # Documentation browser under "/perldoc"
-  $self->plugin('PODRenderer');
-  $self->plugin('App::Helpers');
 
   # Router
   my $r = $self->routes;
    
- $r->any('/')->to( 'users#auth_form' );
- $r->any('/login')->to( 'users#auth_form' );
- $r->any('/logout')->to( 'users#delete' ); 
- $r->any('/create')->to( 'users#create' ); 
+ $r->any('/')->to( 'auth#form' );
+ $r->any('/login')->to( 'auth#form' );
+ $r->any('/logout')->to( 'auth#delete' ); 
+ $r->any('/create')->to( 'auth#create' ); 
+
  $r->any('/api/users')->to( 'users#apilist' );
  $r->any('/api/users/test')->to( 'users#test' );
- $r->any('/square')->to( 'users#square' );
- $r->any('/btn')->to( 'users#btn' );
- $r->websocket('/change')->to( 'users#change_color' );
+
+ $r->any('/square')->to( 'ws#square' );
+ $r->any('/btn')->to( 'ws#btn' );
+ $r->websocket('/change')->to( 'ws#change_color' );
 
 
-  my $auth = $r->under( '/' )->to('users#auth');
+  my $auth = $r->under( '/' )->to('auth#auth');
 
-  # Normal route to controller  
- 
  $auth->get('/users')->to( 'users#list' ); 
  $auth->any('/users/add')->to( 'users#form' ); 
  $auth->any('/users/:ID/edit')->to( 'users#form' ); 
  $auth->get('/users/:ID/remove')->to( 'users#remove' );
- $auth->post('/users/search')->to( 'users#list' );
-
-
- 
- 
- # $r->get('/')->to('example#welcome');
-
+ $auth->post('/users/search')->to( 'users#list' ); 
 }
 
 1;

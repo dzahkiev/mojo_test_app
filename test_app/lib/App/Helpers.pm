@@ -5,7 +5,7 @@ use base 'Mojolicious::Plugin';
   sub register {
 
       my ($self, $app) = @_;
-
+      my $dbh;
       $app->helper( logged => sub { 
       		my $self = shift; 
       	  $self->session('login') ? 1 : 0;
@@ -23,12 +23,7 @@ use base 'Mojolicious::Plugin';
 	    $dbh->disconnect; 
      	return $res;
       });
-
-
-
-
-
-
+    
 
   }
 
