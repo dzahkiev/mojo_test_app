@@ -20,104 +20,102 @@ sub list {
 
  
 sub form {
-  my ( $self ) = @_;   
-  my $link;
-  if ( $self->param( 'ID' ) && ! defined $self->param( 'submit' ) )  {
-    my $query = "SELECT * FROM users WHERE ID = ?" ;
-    my $users->{0} = $self->select_row( $query, $self->param( 'ID' ) );
-    $users->{email}{valid} = 1; 
-    $users->{date}{valid} = check_date ( $users->{0}{created} );
-    $link = "/users/" . $self->param( 'ID' ) . "/edit";
-    $self->render( msg => 'Editing user', btn_text => 'Save', fields => $users, link => $link );
+my ( $self ) = @_;   
+my $link;
+my $submit = $self->param( 'submit' );
+my $id = $self->param( 'ID' );
+my @param;
+my @val_fields;
+my $valid;
+if ( $id && ! defined $submit )  {
+  my $query = "SELECT * FROM users WHERE ID = ?" ;
+  my $users = $self->select_row( $query, $id );
+  $val_fields[0] = 1; 
+  $val_fields[2] = 1;
+  $link = "/users/$id/edit";
+  $self->render( msg => 'Editing user', btn_text => 'Save', fields => $users, valid => \@val_fields, link => $link );
  }
-  elsif ( $self->param( 'submit' ) ) {
-  	my @param;
-
-    $param[0] = $self->param( 'name' );
-  	$param[1] = $self->param( 'email' );
-  	$param[2] = $self->param( 'password' );    
-    $param[3] = $self->param( 'sex' );
-  	$param[4] = $self->param( 'money' ) || 0;
-  	$param[5] = $self->param( 'created' ); 
-    $param->{email}{valid} = check_email ($param->{0}{email});
-    $param->{password}{valid} = check_password ( $param->{0}{password} );
-    $param->{date}{valid} = check_date ( $param->{0}{created} );
-
-    my $upload = $self->req->upload( 'uploadImage' );
-    my $filename = $upload->filename;  
-    if ( $filename =~/\.(?:jpe?g|png)$/i ) {
-      my $i;
-      while (-e "public/img/$filename" ) {
-        $i++;
-        $filename = $` . "-00$i" . $&; 
-      }
-       $upload->move_to( "public/img/$filename" );
-       $param[6] = $filename || '';
+elsif ( $submit ) {
+push @param, (  $self->param( 'name' ),  
+                $self->param( 'email' ),  
+                $self->param( 'password' ),  
+                $self->param( 'sex' ),
+                $self->param( 'money' ) || 0,
+                $self->param( 'created' ) );
+  $val_fields[0] = check_email ($param[1]);
+  $val_fields[1] = check_password ( $param[2] );
+  $val_fields[2] = check_date ( $param[5] );
+  my $upload = $self->req->upload( 'uploadImage' );
+  my $filename = $upload->filename;  
+  if ( $filename =~/\.(?:jpe?g|png)$/i ) {
+    my $i;
+    while ( -e "public/img/$filename" ) {
+      $i++;
+      $filename = $` . "-00$i" . $&; 
     }
-
-   my $valid = check_email_password( @param[1,2,5] ); 
-    if ( !$self->param( 'ID' ) ) {
-    ( $valid = 0, $param->{email}{valid} = 0 ) if is_exist_email( $self, $param[1] );
-    }
-     
-if ( $valid ) {
-  	my $query;
-    my $id = $self->param( 'ID' );
-
-    if ( $id ) {
-       $query =  "UPDATE users SET name = ? , email = ? , pass = MD5(?) , sex = ? , money = ? , created = ?, photo = ?  WHERE id = $id"; 
-  } 
-    else {
-        $query = "INSERT INTO users (name, email, pass, sex, money, created, photo )
-                      VALUES ( ?, ?, MD5(?), ?, ?, ?, ? ) ";                      
+    $upload->move_to( "public/img/$filename" );
   }
-
-  	my $res = $self->execute_qw($query, @param); 
-	 	 
-    my $message;
-    if ($res) {
-      $message  = $id ?  'The user is was edited!' : 'The user is was added!';
-    }
-    else {
-      $message = 'Something wrong!'; 
-    }
+  $param[6] = $filename || '';
+  my $valid = check_email_password( @param[1,2,5] ); 
+  if ( !$id ) {
+  ( $valid = 0, $val_fields[0] = 0 ) if is_exist_email( $self, $param[1] );
+}
+     
+if ( $valid ) { 
+  my $query = ($id)  ? "UPDATE users SET name = ? , email = ? , pass = MD5(?) , sex = ? , money = ? , created = ?, photo = ?  where id = $id"
+  : "insert into users (name, email, pass, sex, money, created, photo ) values ( ?, ?, MD5(?), ?, ?, ?, ? ) ";                      
+  my $res = $self->execute_qw($query, @param); 
+	my $message;
+  if ($res) {
+      $message  = $id ?  'The user was edited!' : 'The user was added!';
+  } 
+  else {
+    $message = 'Something wrong!'; 
+  }
   $self->flash(message =>  $message);
   $self->redirect_to( 'users'); 
-}
-  else {
-    my $btn_text = $self->param( 'ID' ) ?  'Save' : 'Add user';
-    my $mess = $self->param( 'ID' ) ?  'Editing user' : 'Add new user';
-   	$self->render( msg => $mess, btn_text => $btn_text,  fields => $param, link => $link);
-   } 
-} 
-  else {
-   $link = "/users/add"; 
-   $self->render( msg => 'Add new user',  btn_text => 'Add user', fields => my $param, link => $link);
-  }
+ } 
+ else{
+  my $btn_text = $id ?  'Save' : 'Add user';
+  my $title = $id ?  'Editing user' : 'Add new user';
+  $link = "/users/add" unless $id; 
+  $self->render( msg => $title,  btn_text =>  $btn_text, fields => \@param, valid => \@val_fields, link => $link);
+ }
 
+} 
+else {  
+  $self->render( msg => 'Add new user',  btn_text => 'Add user', fields => $$param, valid => \@val_fields, link => $link);
+  }
 }
+
+
+sub  remove {
+  my $self = shift;
+  my $id = $self->param( 'ID' );
+  $self->delete_user( $id );
+  $self->flash( message => 'The user was removed!' );
+  $self->redirect_to( 'users' ); 
+ }
 
 
 sub check_email_password {
 	my ( $email, $password, $date ) = @_; 
-	( check_email( $email ) && check_password( $password ) && check_date( $date ) ) ? return 1 :	return 0;
-	
+	( check_email( $email ) && check_password( $password ) && check_date( $date ) ) ? 1 :	0;
 } 
 
 sub check_email {
   my $email = shift;
-  ( $email =~/^([a-z0-9_-]+\.*)*@[a-z0-9_-]+\.[a-z]{2,6}$/i ) ? return 1 : return 0;
-
+  ( $email =~/^([a-z0-9_-]+\.*)*@[a-z0-9_-]+\.[a-z]{2,6}$/i ) ?  1 :  0;
 }
 
 sub check_password {
   my $password = shift;
-  ( $password =~/^[a-zA-Z0-9]{6,}$/i ) ? return 1 : return 0;
+  ( $password =~/^[a-zA-Z0-9]{6,}$/i ) ?  1 : 0;
 }
 
 sub check_date {
   my $date = shift;
-  ( $date =~/^(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})$/i ) ? return 1 : return 0;
+  ( $date =~/^(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})$/i ) ? 1 : 0;
 }
 
 
@@ -127,17 +125,6 @@ sub is_exist_email {
   my $res = $self->select_row( $query, $email );
   return  $res;
 }
-
-
-sub  remove {
-	my $self = shift;
-	my $id = $self->param( 'ID' );
-  $self->delete_user( $id );
-  $self->flash( message => 'The user was removed!' );
-	$self->redirect_to( 'users' ); 
-
- }
-
 
 
 

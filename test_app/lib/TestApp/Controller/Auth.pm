@@ -15,7 +15,6 @@ sub create {
   my ( $self ) = @_ ; 
   my $login  = $self->param( 'login' ); 
   my $password = md5_hex( $self->param( 'password' ) ); 
-  
   if ( exists_user( $self, $login, $password ) ) {
     $self->session ( login => $login );
     $self->redirect_to( '/users' );
@@ -44,8 +43,7 @@ sub form {
 sub exists_user {
   my ( $self, @params)  = @_; 
   my $query = "SELECT * FROM users WHERE email = ? AND pass = ? ";
-  my $res = $self->select_row( $query, @params ); 
-  $res ? 1 : 0;
+  my $res = $self->select_row( $query, @params );  
 }
 
   

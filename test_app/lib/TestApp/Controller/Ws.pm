@@ -16,11 +16,11 @@ sub btn {
 }
 
 sub change_color {
-my $self = shift ;  
-$client->{$i} = $self->tx;
-$i++;
+  my $self = shift ;  
+  $client->{$i} = $self->tx;
+  $i++;
 
-$self->on( message => sub {
+  $self->on( message => sub {
   my ( $self, $msg ) = @_;  
   my @color_char = ( 0..9, 'A'..'F' );
   my $color = '#';

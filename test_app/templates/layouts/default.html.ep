@@ -8,14 +8,14 @@
   <body>
 <% 
 if ( my $auth_user =  user (stash 'user') )  { %>
-<div align="center"><b> Welcome, <%= $auth_user->{name} %> </b>
+<div align="center"><b> Welcome, <%= $auth_user->[1] %> </b>
 <a href="/logout"><b>Logout</b></a>
 </div> 
 <table class="table table-striped table-bordered table-hover table-condensed table-bordered"   >
 	<tr>
-<%  for (keys $auth_user) { %>
+<%  for ( @$auth_user) { %>
 
-	<td><%= $auth_user->{$_} %> </td>
+	<td><%= $_ %> </td>
 <%}%>
 </tr>
 </table>

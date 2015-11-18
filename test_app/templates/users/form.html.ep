@@ -5,21 +5,21 @@
 <form  class="col-md-3"  enctype="multipart/form-data" action="<%= $link %>" method="post" name="add_user" >
 	
 	  
-	<p class="form-group <%= ( !$fields->{email}{valid} ) ? 'has-error' : 'has-success' %>">
+	<p class="form-group <%= ( $valid->[0] ) ? 'has-success' : 'has-error' %>">
 	<b class="control-label"> E-mail</b>
-		<input class="form-control" type="text" size="40" name="email" value="<%= $fields->{0}{email} %>">
+		<input class="form-control" type="text" size="40" name="email" value="<%= $fields->[2] %>">
 	</p>
-	 <p class="form-group <%= ( !$fields->{password}{valid} ) ? 'has-error' : 'has-success'%>">
+	 <p class="form-group <%= ( $valid->[1] ) ? 'has-success' : 'has-error' %>">
 		<b class="control-label">Password</b><br> 
 		<input class="form-control"  type="password" size="40" name="password">
 	</p>
 	<p class="form-group">
 	<b class="control-label"> Name</b>
-		<input class="form-control" type="text" size="40" name="name" value="<%= $fields->{0}{name} %>">
+		<input class="form-control" type="text" size="40" name="name" value="<%= $fields->[1] %>">
 	</p>
 	<p class="form-group ">
 		<b class="control-label">Money</b><br>
-		<input class="form-control"  type="text" size="40" name="money" value="<%= $fields->{0}{money} %>">
+		<input class="form-control"  type="text" size="40" name="money" value="<%= $fields->[5] %>">
 	</p>
 	<p class="form-group ">
 		<b class="control-label">Sex</b><br>
@@ -29,9 +29,9 @@
     	<option>M</option>
  		</select>
 	</p>
-	<p class="form-group <%= ( !$fields->{date}{valid} ) ? 'has-error' : 'has-success' %>">
+	<p class="form-group <%= ( $valid->[2] ) ? 'has-success' : 'has-error' %>">
 		<b class="control-label" >Created</b><br>
-		<input class="form-control"  type="text" size="40" name="created" value="<%= $fields->{0}{created} %>">
+		<input class="form-control"  type="text" size="40" name="created" value="<%= $fields->[7] %>">
 	</p>
 	<p class="form-group">
 		<b class="control-label" >Image</b><br>

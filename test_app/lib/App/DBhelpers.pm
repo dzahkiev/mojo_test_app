@@ -9,7 +9,7 @@ sub register {
 
 $app->helper( db => sub { 
      my $self = shift; 
-     $dbh = DBI->connect( "DBI:mysql:dbname=test;host=localhost;port=3306" );
+     $dbh = DBI->connect( "DBI:mysql:dbname=test;host=localhost;port=3306" ) or die "Couldn't connect!" ;
 });
 
 
@@ -31,7 +31,7 @@ $app->helper( select_row => sub {
      my ( $self, $query, @params) = @_;
      my $sth = $dbh->prepare( $query );
      $sth->execute( @params ); 
-     return $sth->fetchrow_hashref;
+     return $sth->fetchrow_arrayref;
 });
 
 
@@ -50,8 +50,6 @@ $app->helper( delete_user => sub {
      my $res = $sth->execute( $param ); 
      return $res;
 });
-
- 
 
 
 }
