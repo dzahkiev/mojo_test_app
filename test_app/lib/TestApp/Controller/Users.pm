@@ -1,7 +1,5 @@
 package TestApp::Controller::Users;
-use base 'Mojolicious::Controller';   
-use feature qw(say switch);
-use Mojo::JSON qw(decode_json encode_json); 
+use base 'Mojolicious::Controller';    
  
  
 sub list {
