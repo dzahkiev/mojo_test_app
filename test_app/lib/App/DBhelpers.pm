@@ -17,13 +17,11 @@ $app->helper( select_rows => sub {
   my ( $self, $query, $params ) = @_; 
   my $sth = $dbh->prepare( $query );
   $params ? $sth->execute( $params ) : $sth->execute(); 
-  my $i = 0;
-  my $data;
+  my @data;
   while ( my $ref = $sth->fetchrow_hashref ) {
-	  $data->{$i} = $ref;
-	  $i++;
+	 push @data, $ref; 
   }
-  return $data;
+  return \@data;
 });
  
 
@@ -31,7 +29,7 @@ $app->helper( select_row => sub {
      my ( $self, $query, @params) = @_;
      my $sth = $dbh->prepare( $query );
      $sth->execute( @params ); 
-     return $sth->fetchrow_arrayref;
+     return $sth->fetchrow_hashref;
 });
 
 
@@ -39,14 +37,14 @@ $app->helper( select_row => sub {
 $app->helper( execute_qw => sub { 
      my ( $self, $query, @params) = @_;
      my $sth = $dbh->prepare( $query );
-     my @res = $sth->execute( @params ); 
-     return @res;
+     my $res = $sth->execute( @params ); 
+     return $res;
 });
 
 
 $app->helper( delete_user => sub { 
-     my ( $self, $param) = @_;
-     my $sth = $dbh->prepare( "DELETE FROM users WHERE id = ?" );
+     my ( $self, $query, $param) = @_;
+     my $sth = $dbh->prepare( $query );
      my $res = $sth->execute( $param ); 
      return $res;
 });

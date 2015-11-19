@@ -1,11 +1,9 @@
-% layout 'default'; 
-% use Mojo::JSON qw(decode_json encode_json); 
-
+% layout 'default';  
 <div class = "page-header">
-<h4><%= $msg %></43>
+<h4>Users List</h4>
 </div>
 <form action="/users/search" method="post" name="search_form">
-	<input type="text" name="search_str" value="<%= $searching_string %>">
+	<input type="text" name="search_str" value="<%= $self->param('search_str') %>">
 	<button type="submit" name="search" value="search">Search</button>
 </form>
 <br>
@@ -13,9 +11,9 @@
 <div class="alert alert-success ">
    <%= $message %>
 </div>
-     <% } %>
+<% } %>
  
-<% unless ($k) { %> 
+<% unless ($users) { %> 
 <div class="alert alert-warning ">
    No data selected!
 </div>
@@ -35,23 +33,23 @@
 		<th>Remove</th>
 	</tr>
 
- <% for ( sort keys %$k) { %>
+ <% for  my $user ( @$users ) { %>
 	 <tr>
-	 <td><%= $k->{$_}{id} %></td>
-	 <td><%= $k->{$_}{name} %></td>
+	 <td><%= $user->{id} %></td>
+	 <td><%= $user->{name} %></td>
 	 <td>
-	 	% if ( $k->{$_}{photo} ) {
-	 		<img src = "/img/<%= $k->{$_}{photo} %>"  width = "80px" />
+	 	% if ( $user->{photo} ) {
+	 		<img src = "/img/<%= $user->{photo} %>"  width = "80px" />
 	 	% }
 	 </td>
-	 <td><%= $k->{$_}{email} %></td>
-	 <td><%= $k->{$_}{pass} %></td>
-	 <td><%= $k->{$_}{money} %></td>
-	 <td><%= $k->{$_}{sex} %></td>
-	 <td><%= $k->{$_}{updated} %></td>
-	 <td><%= $k->{$_}{created} %></td>
-	 <td align="center"><a href = "/users/<%=$k->{$_}{id}%>/edit"><span class="glyphicon glyphicon-pencil"></span></a></td>
-	 <td align="center"><a href = "/users/<%=$k->{$_}{id}%>/remove"><span class="glyphicon glyphicon-remove"></span></a></td>
+	 <td><%= $user->{email} %></td>
+	 <td><%= $user->{pass} %></td>
+	 <td><%= $user->{money} %></td>
+	 <td><%= $user->{sex} %></td>
+	 <td><%= $user->{updated} %></td>
+	 <td><%= $user->{created} %></td>
+	 <td align="center"><a href = "/users/<%=$user->{id}%>/edit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+	 <td align="center"><a href = "/users/<%=$user->{id}%>/remove"><span class="glyphicon glyphicon-remove"></span></a></td>
 	 </tr>
 
 <% } }%> 

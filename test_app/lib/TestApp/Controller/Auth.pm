@@ -1,6 +1,6 @@
 package TestApp::Controller::Auth;
 use base 'Mojolicious::Controller';
-use Digest::MD5 qw(md5 md5_hex);
+use Digest::MD5 qw(md5_hex);
 use strict; 
  
 

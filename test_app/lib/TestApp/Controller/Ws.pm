@@ -1,6 +1,5 @@
 package TestApp::Controller::Ws;
-use base 'Mojolicious::Controller';   
-use feature qw(say switch); 
+use base 'Mojolicious::Controller';    
  
 my $client;
 my $i = 0;
