@@ -1,6 +1,7 @@
 package App::DBhelpers;
 use base 'Mojolicious::Plugin';
 use DBI;
+use feature qw(say switch);
 
 sub register {
   my ($self, $app) = @_;
@@ -9,6 +10,7 @@ sub register {
 $app->helper( db => sub { 
   my $self = shift; 
   $dbh = DBI->connect( "DBI:mysql:dbname=test;host=localhost;port=3306" ) or die "Couldn't connect!" ;
+  say "Connected!\n";
 });
 
 $app->helper( select_rows => sub { 
@@ -19,6 +21,7 @@ $app->helper( select_rows => sub {
   while ( my $ref = $sth->fetchrow_hashref ) {
   push @data, $ref; 
   }
+  say "Selected!\n";
   return \@data;
 }); 
 

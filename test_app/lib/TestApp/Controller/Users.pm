@@ -1,6 +1,5 @@
 package TestApp::Controller::Users;
 use base 'Mojolicious::Controller';
-use feature qw(switch say);
 
 sub list {
   my $self = shift ;
@@ -19,8 +18,7 @@ sub list {
 sub form {
   my $self = shift;
   my $id = $self->param( 'ID' );
-  my $param = $self->req->params->to_hash;
-  my $val_fields;
+  my $param = $self->req->params->to_hash; 
   my $validator  = Mojolicious::Validator->new;
   my $validation = $validator->validation;
   if ( $self->param( 'submit' ) ) {
@@ -33,8 +31,8 @@ sub form {
     $validation->optional( $filename )->like( qr/\.(?:jpe?g|png)$/i );
     %$val_fields = map { $_ => 1 } @{$validation->passed};
     my $valid;
-    $val_fields->{email} = 0 if is_exist_email( $self, $param->{email} && !$id );
     $valid = ! scalar @{$validation->failed};
+    $valid = $val_fields->{email} = 0 if ( is_exist_email( $self, $param->{email} ) && !$id );
     if ( $valid ) {
       my $query = "insert into users (name, email, pass, sex, money, created) values ( ?, ?, MD5(?), ?, ?, ? ) on duplicate key update name = ?, email = ?, pass = MD5(?), sex = ?, money = ?, created = ?";
       my @values = @$param{name, email, password, sex, money, created};
@@ -42,10 +40,10 @@ sub form {
     	my $message;
       if ($res) {
         my $query = "select id from users where email = ?";
-        my $id = $self->select_row( $query, $param->{email} );
-        $filename =~ s/.+\.(jpe?g|png)$/$id->{id}\.$1/i; 
+        my $img_id = $self->select_row( $query, $param->{email} )->{id};
+        $filename =~ s/.+\.(jpe?g|png)$/$img_id\.$1/i; 
         my $query = "update users set photo = ? where id = ?";
-        $self->execute_qw( $query, $filename, $id->{id} );
+        $self->execute_qw( $query, $filename, $img_id );
         $upload->move_to( "public/img/$filename");
         $message  = $id ? 'The user was edited!' : 'The user was added!';
       }

@@ -13,7 +13,7 @@
 </div>
 <% } %>
  
-<% unless ($users) { %> 
+<% unless (@$users) { %> 
 <div class="alert alert-warning ">
    No data selected!
 </div>
@@ -39,7 +39,7 @@
 	 <td><%= $user->{name} %></td>
 	 <td>
 	 % if ( $user->{photo} ) {
-	 	<img src = "/img/<%= $user->{photo} %>"  width = "80px" />
+	 <img src = "/img/<%= $user->{photo} %>"  width = "80px" />
 	 % }
 	 </td>
 	 <td><%= $user->{email} %></td>

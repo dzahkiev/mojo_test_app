@@ -5,10 +5,9 @@ use strict;
 
 sub auth {
 my ( $self ) = @_ ;
-$self->stash(user => $self->session( 'login' ) ); 
+$self->stash( login => $self->session( 'login' ) ); 
 $self->logged;  
 }
-
 
 sub create {
   my ( $self ) = @_ ; 
