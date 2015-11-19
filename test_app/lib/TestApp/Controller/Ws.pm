@@ -1,8 +1,7 @@
 package TestApp::Controller::Ws;
 use base 'Mojolicious::Controller';    
  
-my $client;
-my $i = 0;
+my @clients; 
 
 sub square {
   my ( $self ) = @_ ; 
@@ -16,8 +15,7 @@ sub btn {
 
 sub change_color {
   my $self = shift ;  
-  $client->{$i} = $self->tx;
-  $i++;
+  push @clients, $self->tx;
 
   $self->on( message => sub {
   my ( $self, $msg ) = @_;  
@@ -26,8 +24,8 @@ sub change_color {
   for ( 1..6 ) {
     $color .= @color_char[ rand scalar @color_char ];
   }
-  for ( keys $client ) {
-     $client->{$_}->send( $color );
+  for my $client ( @clients ) {
+     $client->send( $color );
   }
  });
 }

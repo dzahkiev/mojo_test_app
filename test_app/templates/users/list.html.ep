@@ -2,7 +2,7 @@
 <div class = "page-header">
 <h4>Users List</h4>
 </div>
-<form action="/users/search" method="post" name="search_form">
+<form action="<%= $self->url_for('search_user') %>" method="post" name="search_form">
 	<input type="text" name="search_str" value="<%= $self->param('search_str') %>">
 	<button type="submit" name="search" value="search">Search</button>
 </form>

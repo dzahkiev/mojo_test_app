@@ -9,7 +9,7 @@
 <% 
 if ( my $auth_user =  user (stash 'user') )  { %>
 <div align="center"><b> Welcome, <%= $auth_user->{name} %> </b>
-<a href="/logout"><b>Logout</b></a>
+<a href="<%= $self->url_for('logout') %>"><b>Logout</b></a>
 </div> 
 <table class="table table-striped table-bordered table-hover table-condensed table-bordered" >
 	<tr>

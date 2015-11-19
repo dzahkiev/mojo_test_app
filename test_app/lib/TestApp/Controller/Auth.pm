@@ -17,11 +17,11 @@ sub create {
   my $password = md5_hex( $self->param( 'password' ) ); 
   if ( exists_user( $self, $login, $password ) ) {
     $self->session ( login => $login );
-    $self->redirect_to( '/users' );
+    $self->redirect_to( 'show_users' );
   }
   else {
     $self->flash( error => 'Wrong password or user!' );
-    $self->redirect_to( '/login' );
+    $self->redirect_to( 'login' );
   }
 }
 
@@ -29,14 +29,14 @@ sub create {
 sub delete {
   my ( $self ) = @_ ; 
   $self->session ( login => '' ); 
-  $self->redirect_to( '/login' );
+  $self->redirect_to( 'login' );
 }
 
 
 sub form {
   my ( $self ) = @_; 
   $self->stash( user => '' ); 
-  $self->logged ? $self->redirect_to( '/users' ) :  $self->render( msg => 'Login form' ); 
+  $self->logged ? $self->redirect_to( 'show_users' ) :  $self->render( msg => 'Login form' ); 
 }
 
 
