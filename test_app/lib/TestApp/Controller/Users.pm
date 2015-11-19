@@ -58,9 +58,9 @@ sub form {
         $message  = $id ? 'The user was edited!' : 'The user was added!';
         my $query = "select id from users where email = ?";
         my $id = $self->select_row( $query, $param->{email} );
+        $filename =~ s/.+\.(jpe?g|png)$/$id->{id}\.$1/i; 
         my $query = "update users set photo = ? where id = ?";
-        $self->execute_qw( $query, $id->{id}, $id->{id} );
-        $filename =~ s/\.(jpe?g|png)$/$id->{id}\.$1/i; 
+        $self->execute_qw( $query, $filename, $id->{id} );
         $upload->move_to( "public/img/$filename") ;
       }
       else {
