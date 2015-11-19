@@ -19,18 +19,12 @@ sub list {
  
 sub form {
   my $self = shift;
-  my $submit = $self->param( 'submit' );
   my $id = $self->param( 'ID' );
   my $param = $self->req->params->to_hash;
   my $val_fields;
   my $validator  = Mojolicious::Validator->new;
   my $validation = $validator->validation;
-  if ( $id && ! defined $submit )  {
-    my $query = "SELECT name, email, pass, sex, money, created FROM users WHERE ID = ?" ;
-    my $users = $self->select_row( $query, $id ); 
-    $self->render( user => $users, valid => $val_fields );
-   }
-  elsif ( $submit ) {
+  if ( $self->param( 'submit' ) ) {
     my $upload = $self->req->upload( 'uploadImage' );
     my $filename = $upload->filename;
     $validation->input( $param );
@@ -42,7 +36,7 @@ sub form {
       $val_fields->{$_} = 1;
     }
     my $valid;
-    $val_fields->{email} = 0 if is_exist_email( $self, $param->{email} );
+    $val_fields->{email} = 0 if is_exist_email( $self, $param->{email} && !$id );
     $valid = ! scalar @{$validation->failed};
     if ( $valid ) {
       my $query = "insert into users (name, email, pass, sex, money, created) values ( ?, ?, MD5(?), ?, ?, ? ) on duplicate key update name = ?, email = ?, pass = ?, sex = ?, money = ?, created = ?";
@@ -68,6 +62,11 @@ sub form {
        $self->render( user => $param, valid => $val_fields );
     }
   } 
+  elsif ( $id )  {
+    my $query = "SELECT name, email, pass, sex, money, created FROM users WHERE ID = ?" ;
+    my $users = $self->select_row( $query, $id ); 
+    $self->render( user => $users, valid => $val_fields );
+   }
   else {
     $self->render( user => $param, valid => $val_fields );
     }

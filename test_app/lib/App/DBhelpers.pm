@@ -1,16 +1,15 @@
 package App::DBhelpers;
 use base 'Mojolicious::Plugin';
+use DBI;
 
 sub register {
   my ($self, $app) = @_;
   my $dbh;
 
-
 $app->helper( db => sub { 
   my $self = shift; 
   $dbh = DBI->connect( "DBI:mysql:dbname=test;host=localhost;port=3306" ) or die "Couldn't connect!" ;
 });
-
 
 $app->helper( select_rows => sub { 
   my ( $self, $query, $params ) = @_; 
@@ -21,8 +20,7 @@ $app->helper( select_rows => sub {
   push @data, $ref; 
   }
   return \@data;
-});
- 
+}); 
 
 $app->helper( select_row => sub { 
   my ( $self, $query, @params) = @_;
@@ -30,8 +28,6 @@ $app->helper( select_row => sub {
   $sth->execute( @params ); 
   return $sth->fetchrow_hashref;
 });
-
-
 
 $app->helper( execute_qw => sub { 
   my ( $self, $query, @params) = @_;
