@@ -18,7 +18,6 @@ if ( my $auth_user =  user (stash 'user') )  { %>
 <% } %>
 </tr>
 </table>
- 
 <ul class="nav nav-pills">
 <li ><a href="<%= url_for( 'show_users' ) %>"><b>Users</b></a></li> 
 <li><a href="<%= url_for( 'add_user' ) %>"><span class="glyphicon glyphicon-plus"><b>Add</b></span></a></li>

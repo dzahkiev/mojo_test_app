@@ -1,26 +1,23 @@
 % layout 'default';
 <div class = "page-header">
-	<h4><%= $msg %></h3> 
+<h4><%= $msg %></h3> 
 </div>
-
- <% if (my $error = flash 'error' ) { %>
+<% if (my $error = flash 'error' ) { %>
 <div class="alert alert-danger">
-   <%= $error %>
+<%= $error %>
 </div>
 <%}%>
 <form  class="col-md-3" action="<%='/create' %>" method="post" name="auth_user" >
-	
-	  
 	<p class="form-group">
 	<b class="control-label"> E-mail</b>
-		<input class="form-control" type="text" size="40" name="login">
+	<input class="form-control" type="text" size="40" name="login">
 	</p>
 	<p class="form-group">
 	<b class="control-label"> Password</b>
-		<input class="form-control" type="text" size="40" name="password">
+	<input class="form-control" type="text" size="40" name="password">
 	</p>
 	<p class="form-group"> 
-		<input    type="submit" class="btn btn-default navbar-btn" size="40" name="submit" value="Sign in">
+	<input    type="submit" class="btn btn-default navbar-btn" size="40" name="submit" value="Sign in">
 	</p> 
 
 </form>

@@ -15,7 +15,6 @@ sub list {
   my $users = $self->select_rows( $query, $searching_string );
   $self->render(users => $users);
 }
-
  
 sub form {
   my $self = shift;
@@ -32,14 +31,12 @@ sub form {
     $validation->required( 'password' )->like( qr/^[a-zA-Z0-9]{6,}$/i );
     $validation->required( 'created' )->like( qr/^(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})$/i );
     $validation->optional( $filename )->like( qr/\.(?:jpe?g|png)$/i );
-    for ( @{$validation->passed}) {
-      $val_fields->{$_} = 1;
-    }
+    %$val_fields = map { $_ => 1 } @{$validation->passed};
     my $valid;
     $val_fields->{email} = 0 if is_exist_email( $self, $param->{email} && !$id );
     $valid = ! scalar @{$validation->failed};
     if ( $valid ) {
-      my $query = "insert into users (name, email, pass, sex, money, created) values ( ?, ?, MD5(?), ?, ?, ? ) on duplicate key update name = ?, email = ?, pass = ?, sex = ?, money = ?, created = ?";
+      my $query = "insert into users (name, email, pass, sex, money, created) values ( ?, ?, MD5(?), ?, ?, ? ) on duplicate key update name = ?, email = ?, pass = MD5(?), sex = ?, money = ?, created = ?";
       my @values = @$param{name, email, password, sex, money, created};
       my $res = $self->execute_qw( $query, @values, @values);
     	my $message;
@@ -56,7 +53,7 @@ sub form {
           $message = 'Something wrong!';
       }
       $self->flash(message =>  $message);
-      $self->redirect_to( 'show_users');
+      $self->redirect_to( 'show_users' );
     } 
     else{
        $self->render( user => $param, valid => $val_fields );
@@ -66,10 +63,10 @@ sub form {
     my $query = "SELECT name, email, pass, sex, money, created FROM users WHERE ID = ?" ;
     my $users = $self->select_row( $query, $id ); 
     $self->render( user => $users, valid => $val_fields );
-   }
+  }
   else {
     $self->render( user => $param, valid => $val_fields );
-    }
+  }
 }
 
 

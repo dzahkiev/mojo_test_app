@@ -2,26 +2,26 @@
 <div class = "page-header">
 <%	
 my $title =   $self->param( 'ID' )  ? 'Edit user' : 'Add user';
-my $btn_text = $self->param( 'ID' )  ? 'Save' : 'Add'; 
+my $btn_text = $self->param( 'ID' )  ? 'Save' : 'Add';  
 %>
 <h4><%= $title %></h4> 
 </div> 
 <form  class="col-md-3"  enctype="multipart/form-data" action="<%= $self->param( 'ID' ) ? $self->url_for('edit_user') :  $self->url_for('add_user') %>" method="post" name="add_user" >
 <p class="form-group <%= 'has-error' unless ( $valid->{email} )  %>">
-	<b class="control-label"> E-mail</b>
-	<input class="form-control" type="text" size="40" name="email" value="<%= $user->{email} %>">
+<b class="control-label"> E-mail</b>
+<input class="form-control" type="text" size="40" name="email" value="<%= $user->{email} %>">
 </p>
 <p class="form-group <%= 'has-error' unless ( $valid->{password} )  %>">
-	<b class="control-label">Password</b><br> 
-	<input class="form-control"  type="password" size="40" name="password">
+<b class="control-label">Password</b><br> 
+<input class="form-control"  type="password" size="40" name="password">
 </p>
 <p class="form-group">
-	<b class="control-label"> Name</b>
-	<input class="form-control" type="text" size="40" name="name" value="<%= $user->{name} %>">
+<b class="control-label"> Name</b>
+<input class="form-control" type="text" size="40" name="name" value="<%= $user->{name} %>">
 </p>
 <p class="form-group ">
-	<b class="control-label">Money</b><br>
-	<input class="form-control"  type="text" size="40" name="money" value="<%= $user->{money} %>">
+<b class="control-label">Money</b><br>
+<input class="form-control"  type="text" size="40" name="money" value="<%= $user->{money} %>">
 </p>
 <p class="form-group ">
 	<b class="control-label">Sex</b><br>
