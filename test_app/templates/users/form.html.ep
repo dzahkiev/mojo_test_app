@@ -8,11 +8,11 @@ my $btn_text = $self->param( 'ID' )  ? 'Save' : 'Add';
 </div> 
 <form  class="col-md-3"  enctype="multipart/form-data" action="<%= $self->param( 'ID' ) ? $self->url_for('edit_user') :  $self->url_for('add_user') %>" method="post" name="add_user" >
 	  
-<p class="form-group <%= ( $valid->{email} ) ? 'has-success' : 'has-error' %>">
+<p class="form-group <%= 'has-error' unless ( $valid->{email} )  %>">
 	<b class="control-label"> E-mail</b>
 	<input class="form-control" type="text" size="40" name="email" value="<%= $user->{email} %>">
 </p>
-<p class="form-group <%= ( $valid->{password} ) ? 'has-success' : 'has-error' %>">
+<p class="form-group <%= 'has-error' unless ( $valid->{password} )  %>">
 	<b class="control-label">Password</b><br> 
 	<input class="form-control"  type="password" size="40" name="password">
 </p>
@@ -32,7 +32,7 @@ my $btn_text = $self->param( 'ID' )  ? 'Save' : 'Add';
     <option>M</option>
  	</select>
 </p>
-<p class="form-group <%= ( $valid->{created} ) ? 'has-success' : 'has-error' %>">
+<p class="form-group <%= 'has-error' unless ( $valid->{created} ) %>">
 	<b class="control-label" >Created</b><br>
 	<input class="form-control"  type="text" size="40" name="created" value="<%= $user->{created} %>">
 </p>

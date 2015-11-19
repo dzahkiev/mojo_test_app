@@ -19,28 +19,28 @@
 </div>
 <% } else { %>
 <table class="table table-striped table-bordered table-hover table-condensed table-bordered" >
-	<tr>
-		<th>ID</th>
-		<th>Name</th>
-		<th>Photo</th>
-		<th>E-mail</th>
-		<th>Password</th>
-		<th>Money</th>
-		<th>Sex</th>
-		<th>Updated</th>
-		<th>Created</th>
-		<th>Edit</th>
-		<th>Remove</th>
-	</tr>
+<tr>
+	<th>ID</th>
+	<th>Name</th>
+	<th>Photo</th>
+	<th>E-mail</th>
+	<th>Password</th>
+	<th>Money</th>
+	<th>Sex</th>
+	<th>Updated</th>
+	<th>Created</th>
+	<th>Edit</th>
+	<th>Remove</th>
+</tr>
 
  <% for  my $user ( @$users ) { %>
 	 <tr>
 	 <td><%= $user->{id} %></td>
 	 <td><%= $user->{name} %></td>
 	 <td>
-	 	% if ( $user->{photo} ) {
-	 		<img src = "/img/<%= $user->{photo} %>"  width = "80px" />
-	 	% }
+	 % if ( $user->{photo} ) {
+	 	<img src = "/img/<%= $user->{photo} %>"  width = "80px" />
+	 % }
 	 </td>
 	 <td><%= $user->{email} %></td>
 	 <td><%= $user->{pass} %></td>
