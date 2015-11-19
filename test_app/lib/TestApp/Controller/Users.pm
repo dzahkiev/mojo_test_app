@@ -81,7 +81,7 @@ sub  remove {
   my $self = shift;
   my $id = $self->param( 'ID' );
   my $query = "delete from users WHERE id = ?";
-  $self->execute_qw( $auery, $id );
+  $self->execute_qw( $query, $id );
   $self->flash( message => 'The user was removed!' );
   $self->redirect_to( '/users' ); 
  }

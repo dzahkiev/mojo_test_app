@@ -42,14 +42,6 @@ $app->helper( execute_qw => sub {
 });
 
 
-$app->helper( delete_user => sub { 
-     my ( $self, $query, $param) = @_;
-     my $sth = $dbh->prepare( $query );
-     my $res = $sth->execute( $param ); 
-     return $res;
-});
-
-
 }
 
 1;
