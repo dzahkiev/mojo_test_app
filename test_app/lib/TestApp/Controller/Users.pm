@@ -89,7 +89,6 @@ sub  remove {
  }
 
 
-
 sub is_exist_email {
   my ( $self, $email ) = @_;
   my $query = "select * from users where email = ? ";

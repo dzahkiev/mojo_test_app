@@ -51,11 +51,4 @@
 	 <td align="center"><a href = "/users/<%=$user->{id}%>/edit"><span class="glyphicon glyphicon-pencil"></span></a></td>
 	 <td align="center"><a href = "/users/<%=$user->{id}%>/remove"><span class="glyphicon glyphicon-remove"></span></a></td>
 	 </tr>
-
 <% } }%> 
-
-
-
-
-
-

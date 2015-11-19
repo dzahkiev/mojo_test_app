@@ -1,8 +1,7 @@
 package TestApp::Controller::Auth;
 use base 'Mojolicious::Controller';
 use Digest::MD5 qw(md5_hex);
-use strict; 
- 
+use strict;  
 
 sub auth {
 my ( $self ) = @_ ;
@@ -46,6 +45,5 @@ sub exists_user {
   my $res = $self->select_row( $query, @params );  
 }
 
-  
 
 1;
