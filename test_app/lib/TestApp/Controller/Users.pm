@@ -42,26 +42,21 @@ sub form {
       $val_fields->{$_} = 1;
     }
     my $valid;
-    if ( !$id ) {
-      ( $valid = 0, $val_fields->{email} = 0 ) if is_exist_email( $self, $param->{email} );
-    }
-    else {
-      $valid = ! scalar @{$validation->failed};
-    }
-       
+    $val_fields->{email} = 0 if is_exist_email( $self, $param->{email} );
+    $valid = ! scalar @{$validation->failed};
     if ( $valid ) {
       my $query = "insert into users (name, email, pass, sex, money, created) values ( ?, ?, MD5(?), ?, ?, ? ) on duplicate key update name = ?, email = ?, pass = ?, sex = ?, money = ?, created = ?";
       my @values = @$param{name, email, password, sex, money, created};
       my $res = $self->execute_qw( $query, @values, @values);
     	my $message;
       if ($res) {
-        $message  = $id ? 'The user was edited!' : 'The user was added!';
         my $query = "select id from users where email = ?";
         my $id = $self->select_row( $query, $param->{email} );
         $filename =~ s/.+\.(jpe?g|png)$/$id->{id}\.$1/i; 
         my $query = "update users set photo = ? where id = ?";
         $self->execute_qw( $query, $filename, $id->{id} );
-        $upload->move_to( "public/img/$filename") ;
+        $upload->move_to( "public/img/$filename");
+        $message  = $id ? 'The user was edited!' : 'The user was added!';
       }
       else {
           $message = 'Something wrong!';
