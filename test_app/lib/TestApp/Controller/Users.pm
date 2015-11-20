@@ -26,24 +26,27 @@ sub form {
     my $filename = $upload->filename;
     $validation->input( $param );
     $validation->required( 'email' )->like( qr/^([a-z0-9_-]+\.*)*@[a-z0-9_-]+\.[a-z]{2,6}$/i );
-    $validation->required( 'password' )->like( qr/^[a-zA-Z0-9]{6,}$/i );
+    $validation->required( 'password' )->like( qr/^[a-z0-9]{6,}$/i );
+    $validation->required( 'name' )->like( qr/^[a-z]{4,20}$/i );
     $validation->required( 'created' )->like( qr/^(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})$/i );
-    $validation->optional( $filename )->like( qr/\.(?:jpe?g|png)$/i );
+    $validation->optional( $filename )->like( qr/.+\.(?:jpe?g|png)$/i );
     %$val_fields = map { $_ => 1 } @{$validation->passed};
     my $valid = ! scalar @{$validation->failed};
-    $valid = $val_fields->{email} = 0 if ( is_exist_email( $self, $param->{email} ) && !$id );
+    $valid = $val_fields->{email} = 0 if ( exists_email( $self, $param->{email} ) && !$id );
     if ( $valid ) {
       my $query = "insert into users (name, email, pass, sex, money, created) values ( ?, ?, MD5(?), ?, ?, ? ) on duplicate key update name = ?, email = ?, pass = MD5(?), sex = ?, money = ?, created = ?";
       my @values = @$param{name, email, password, sex, money, created};
       my $res = $self->execute_qw( $query, @values, @values);
-    	my $message;
+      my $message;
       if ( $res ) {
-        my $query = "select id from users where email = ?";
-        my $img_id = $self->select_row( $query, $param->{email} )->{id};
-        $filename =~ s/.+\.(jpe?g|png)$/$img_id\.$1/i;
-        my $query = "update users set photo = ? where id = ?";
-        $self->execute_qw( $query, $filename, $img_id );
-        $upload->move_to( "public/img/$filename");
+        if ( $validation->is_valid( $filename ) ) {
+          my $query = "select id from users where email = ?";
+          my $img_id = $self->select_row( $query, $param->{email} )->{id};
+          $filename =~ s/.+\.(jpe?g|png)$/$img_id\.$1/i;
+          my $query = "update users set photo = ? where id = ?";
+          $self->execute_qw( $query, $filename, $img_id );
+          $upload->move_to( "public/img/$filename");
+        }
         $message  = $id ? 'The user was edited!' : 'The user was added!';
       }
       else {
@@ -77,11 +80,26 @@ sub  remove {
  }
 
 
-sub is_exist_email {
+sub exists_email {
   my ( $self, $email ) = @_;
   my $query = "select * from users where email = ?";
   my $res = $self->select_row( $query, $email );
   return  $res;
+}
+
+
+sub apilist {
+  my $self = shift;
+  use Mojo::JSON qw(decode_json encode_json);
+  my $searching_string = $self->param( 'search' );
+  if ( $searching_string ) {
+    $query =  "select * from users where match (name, email) against ( ? )";
+  }
+  else {
+    $query =  "select * from users" ;
+  }
+  my $users = encode_json ( $self->select_rows( $query, $searching_string ) );
+  $self->render( json => { status => ok, $users } );
 }
 
 

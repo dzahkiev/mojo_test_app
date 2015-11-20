@@ -12,7 +12,7 @@
 	<%= $message %>
 </div>
 <% } %>
-<% unless (@$users) { %>
+<% unless ( $users ) { %>
 <div class="alert alert-warning ">
 	No data selected!
 </div>

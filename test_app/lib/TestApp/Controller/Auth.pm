@@ -1,18 +1,18 @@
 package TestApp::Controller::Auth;
 use base 'Mojolicious::Controller';
 use Digest::MD5 qw(md5_hex);
-use strict;  
+use strict;
 
 sub auth {
 my ( $self ) = @_ ;
-$self->stash( login => $self->session( 'login' ) ); 
-$self->logged;  
+$self->stash( login => $self->session( 'login' ) );
+$self->logged;
 }
 
 sub create {
-  my ( $self ) = @_ ; 
-  my $login  = $self->param( 'login' ); 
-  my $password = md5_hex( $self->param( 'password' ) ); 
+  my ( $self ) = @_ ;
+  my $login  = $self->param( 'login' );
+  my $password = md5_hex( $self->param( 'password' ) );
   if ( exists_user( $self, $login, $password ) ) {
     $self->session ( login => $login );
     $self->redirect_to( 'show_users' );
@@ -25,20 +25,20 @@ sub create {
 
 sub delete {
   my ( $self ) = @_ ; 
-  $self->session ( login => '' ); 
+  $self->session ( login => '' );
   $self->redirect_to( 'login' );
 }
 
 sub form {
-  my ( $self ) = @_; 
-  $self->stash( user => '' ); 
-  $self->logged ? $self->redirect_to( 'show_users' ) :  $self->render( msg => 'Login form' ); 
+  my ( $self ) = @_;
+  $self->stash( user => '' );
+  $self->logged ? $self->redirect_to( 'show_users' ) :  $self->render( msg => 'Login form' );
 }
 
 sub exists_user {
-  my ( $self, @params)  = @_; 
+  my ( $self, @params)  = @_;
   my $query = "SELECT * FROM users WHERE email = ? AND pass = ? ";
-  my $res = $self->select_row( $query, @params );  
+  my $res = $self->select_row( $query, @params );
 }
 
 
