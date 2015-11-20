@@ -23,20 +23,17 @@ sub create {
   }
 }
 
-
 sub delete {
   my ( $self ) = @_ ; 
   $self->session ( login => '' ); 
   $self->redirect_to( 'login' );
 }
 
-
 sub form {
   my ( $self ) = @_; 
   $self->stash( user => '' ); 
   $self->logged ? $self->redirect_to( 'show_users' ) :  $self->render( msg => 'Login form' ); 
 }
-
 
 sub exists_user {
   my ( $self, @params)  = @_; 

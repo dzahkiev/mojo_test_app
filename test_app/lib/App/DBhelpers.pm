@@ -1,41 +1,38 @@
 package App::DBhelpers;
 use base 'Mojolicious::Plugin';
 use DBI;
-use feature qw(say switch);
 
 sub register {
   my ($self, $app) = @_;
   my $dbh;
 
-$app->helper( db => sub { 
+$app->helper( db => sub {
   my $self = shift; 
-  $dbh = DBI->connect( "DBI:mysql:dbname=test;host=localhost;port=3306" ) or die "Couldn't connect!" ;
-  say "Connected!\n";
+  $dbh = DBI->connect( "DBI:mysql:dbname=test;host=localhost;port=3306" ) or die "Couldn't connect!";
 });
 
-$app->helper( select_rows => sub { 
-  my ( $self, $query, $params ) = @_; 
+$app->helper( select_rows => sub {
+  my ( $self, $query, $params ) = @_;
   my $sth = $dbh->prepare( $query );
-  $params ? $sth->execute( $params ) : $sth->execute(); 
-  my @data;
+  $params ? $sth->execute( $params ) : $sth->execute();
+  my $data;
   while ( my $ref = $sth->fetchrow_hashref ) {
-  push @data, $ref; 
+  push @$data, $ref;
   }
-  say "Selected!\n";
-  return \@data;
-}); 
+  return $data;
+});
 
-$app->helper( select_row => sub { 
+$app->helper( select_row => sub {
   my ( $self, $query, @params) = @_;
   my $sth = $dbh->prepare( $query );
   $sth->execute( @params ); 
   return $sth->fetchrow_hashref;
 });
 
-$app->helper( execute_qw => sub { 
+$app->helper( execute_qw => sub {
   my ( $self, $query, @params) = @_;
   my $sth = $dbh->prepare( $query );
-  my $res = $sth->execute( @params ); 
+  my $res = $sth->execute( @params );
   return $res;
 });
 

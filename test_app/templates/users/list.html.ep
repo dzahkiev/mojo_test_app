@@ -1,4 +1,4 @@
-% layout 'default';  
+% layout 'default';
 <div class = "page-header">
 <h4>Users List</h4>
 </div>
@@ -9,16 +9,15 @@
 <br>
 <% if (my $message = flash 'message' ) { %>
 <div class="alert alert-success ">
-   <%= $message %>
+	<%= $message %>
 </div>
 <% } %>
- 
-<% unless (@$users) { %> 
+<% unless (@$users) { %>
 <div class="alert alert-warning ">
-   No data selected!
+	No data selected!
 </div>
 <% } else { %>
-<table class="table table-striped table-bordered table-hover table-condensed table-bordered" >
+<table class="table table-striped table-bordered table-hover table-condensed table-bordered">
 <tr>
 	<th>ID</th>
 	<th>Name</th>
@@ -32,23 +31,22 @@
 	<th>Edit</th>
 	<th>Remove</th>
 </tr>
-
- <% for  my $user ( @$users ) { %>
-	 <tr>
-	 <td><%= $user->{id} %></td>
-	 <td><%= $user->{name} %></td>
-	 <td>
-	 % if ( $user->{photo} ) {
-	 <img src = "/img/<%= $user->{photo} %>"  width = "80px" />
-	 % }
-	 </td>
-	 <td><%= $user->{email} %></td>
-	 <td><%= $user->{pass} %></td>
-	 <td><%= $user->{money} %></td>
-	 <td><%= $user->{sex} %></td>
-	 <td><%= $user->{updated} %></td>
-	 <td><%= $user->{created} %></td>
-	 <td align="center"><a href = "/users/<%=$user->{id}%>/edit"><span class="glyphicon glyphicon-pencil"></span></a></td>
-	 <td align="center"><a href = "/users/<%=$user->{id}%>/remove"><span class="glyphicon glyphicon-remove"></span></a></td>
-	 </tr>
-<% } }%> 
+<% for my $user ( @$users ) { %>
+	<tr>
+	<td><%= $user->{id} %></td>
+	<td><%= $user->{name} %></td>
+	<td>
+	% if ( $user->{photo} ) {
+	<img src = "/img/<%= $user->{photo} %>"  width = "80px" />
+	% }
+	</td>
+	<td><%= $user->{email} %></td>
+	<td><%= $user->{pass} %></td>
+	<td><%= $user->{money} %></td>
+	<td><%= $user->{sex} %></td>
+	<td><%= $user->{updated} %></td>
+	<td><%= $user->{created} %></td>
+	<td align="center"><a href = "/users/<%=$user->{id}%>/edit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+	<td align="center"><a href = "/users/<%=$user->{id}%>/remove"><span class="glyphicon glyphicon-remove"></span></a></td>
+	</tr>
+<% } }%>
