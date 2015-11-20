@@ -13,8 +13,8 @@ sub  register {
 
   $app->helper( user => sub {
     my ($self, $log) = @_;
-    my $query = "SELECT * FROM users WHERE email = ? ";
-    my $res =  $self->select_row( $query, $log );
+    my $query = "SELECT * FROM users WHERE email = ?";
+    my $res = $self->select_row( $query, $log );
   });
 
 }

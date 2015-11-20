@@ -7,11 +7,11 @@
 	<button type="submit" name="search" value="search">Search</button>
 </form>
 <br>
-<% if (my $message = flash 'message' ) { %>
+% if (my $message = flash 'message' ) {
 <div class="alert alert-success ">
 	<%= $message %>
 </div>
-<% } %>
+% }
 <% unless ( $users ) { %>
 <div class="alert alert-warning ">
 	No data selected!
@@ -31,7 +31,7 @@
 	<th>Edit</th>
 	<th>Remove</th>
 </tr>
-<% for my $user ( @$users ) { %>
+% for my $user ( @$users ) {
 	<tr>
 	<td><%= $user->{id} %></td>
 	<td><%= $user->{name} %></td>
@@ -49,4 +49,4 @@
 	<td align="center"><a href = "/users/<%=$user->{id}%>/edit"><span class="glyphicon glyphicon-pencil"></span></a></td>
 	<td align="center"><a href = "/users/<%=$user->{id}%>/remove"><span class="glyphicon glyphicon-remove"></span></a></td>
 	</tr>
-<% } }%>
+% } }

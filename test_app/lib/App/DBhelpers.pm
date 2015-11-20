@@ -25,7 +25,7 @@ $app->helper( select_rows => sub {
 $app->helper( select_row => sub {
   my ( $self, $query, @params) = @_;
   my $sth = $dbh->prepare( $query );
-  $sth->execute( @params ); 
+  $sth->execute( @params );
   return $sth->fetchrow_hashref;
 });
 
@@ -35,7 +35,6 @@ $app->helper( execute_qw => sub {
   my $res = $sth->execute( @params );
   return $res;
 });
-
 
 }
 

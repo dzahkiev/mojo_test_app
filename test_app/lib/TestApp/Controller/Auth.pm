@@ -32,7 +32,7 @@ sub delete {
 sub form {
   my ( $self ) = @_;
   $self->stash( user => '' );
-  $self->logged ? $self->redirect_to( 'show_users' ) :  $self->render( msg => 'Login form' );
+  $self->logged ? $self->redirect_to( 'show_users' ) : $self->render( msg => 'Login form' );
 }
 
 sub exists_user {
