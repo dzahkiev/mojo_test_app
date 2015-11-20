@@ -17,7 +17,7 @@ sub startup {
  $r->get( '/square' )				->to( 'ws#square' )		->name( 'square' );
  $r->get( '/btn' )				->to( 'ws#btn' )		->name( 'button' );
  $r->websocket( '/change' )			->to( 'ws#change_color' )	->name( 'change_color' );
- my $auth = $r->under( '/' )			->to('auth#auth')		->name( 'auth_user' );
+ my $auth = $r->under( '/' )			->to('auth#login')		->name( 'auth_user' );
  $auth->get( '/users' )				->to( 'users#list' )		->name( 'show_users' );
  $auth->any( '/users/add' )			->to( 'users#form' )		->name( 'add_user' );
  $auth->any( '/users/:ID/edit' )		->to( 'users#form' )		->name( 'edit_user' );

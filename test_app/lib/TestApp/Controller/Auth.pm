@@ -3,7 +3,7 @@ use base 'Mojolicious::Controller';
 use Digest::MD5 qw(md5_hex);
 use strict;
 
-sub auth {
+sub login {
 my ( $self ) = @_ ;
 $self->stash( login => $self->session( 'login' ) );
 $self->logged;
