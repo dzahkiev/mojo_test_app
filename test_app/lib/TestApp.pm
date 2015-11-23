@@ -12,7 +12,7 @@ sub startup {
  $r->get( '/login' )				->to( 'auth#form' )		->name( 'login' );
  $r->get( '/logout' )				->to( 'auth#delete' )		->name( 'logout' );
  $r->any( '/create' )				->to( 'auth#create' )		->name( 'create_session' );
- $r->any( '/api/users' )			->to( 'users#apilist' )		->name( 'users_api' );
+ $r->any( '/api/users' )			->to( 'users#list' )		->name( 'users_api' );
  $r->any( '/api/test' )			->to( 'users#test' )		->name( 'test_api' );
  $r->get( '/square' )				->to( 'ws#square' )		->name( 'square' );
  $r->get( '/btn' )				->to( 'ws#btn' )		->name( 'button' );

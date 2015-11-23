@@ -1,7 +1,7 @@
 % layout 'default';
 <div class = "page-header">
-% my $title =	$self->param( 'ID' ) ? 'Edit user' : 'Add user';
-% my $btn_text = $self->param( 'ID' ) ? 'Save' : 'Add';
+% my $title		= $self->param( 'ID' ) ? 'Edit user' : 'Add user';
+% my $btn_text	= $self->param( 'ID' ) ? 'Save' : 'Add';
 <h4><%= $title %></h4> 
 </div>
 <form class="col-md-3" enctype="multipart/form-data" action="<%= $self->param( 'ID' ) ? $self->url_for('edit_user') : $self->url_for('add_user') %>" method="post" name="add_user" >
