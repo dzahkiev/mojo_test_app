@@ -12,8 +12,9 @@ sub list {
     $query =  "select * from users";
   }
   my $users = $self->select_rows( $query, $searching_string );
+  use Mojo::JSON qw(decode_json encode_json);
   $self->respond_to(
-    json =>     { json => { status => ok, $users }  },
+    json =>     { json => { status => ok, encode_json $users } },
     html => sub { return $self->render(users => $users);}
      );
 }
