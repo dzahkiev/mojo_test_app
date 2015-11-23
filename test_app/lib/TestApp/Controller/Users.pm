@@ -53,9 +53,9 @@ sub form {
           $filename   =~ s/.+\.(jpe?g|png)$/$img_id\.$1/i;
           my $query   = "update users set photo = ? where id = ?";
           $self->execute_qw( $query, $filename, $img_id );
-          $upload->move_to( "public/img/$filename");
+          $upload ->move_to( "public/img/$filename");
         }
-        $message  = $id ? 'The user was edited!' : 'The user was added!';
+        $message = $id ? 'The user was edited!' : 'The user was added!';
       }
       else {
           $message = 'Something wrong!';
@@ -68,8 +68,8 @@ sub form {
     }
   }
   elsif ( $id ) {
-    my $query = "select name, email, pass, sex, money, created from users where id = ?";
-    my $user = $self->select_row( $query, $id );
+    my $query   = "select name, email, pass, sex, money, created from users where id = ?";
+    my $user    = $self->select_row( $query, $id );
     return $self->render( user => $user, valid => $val_fields );
   }
   else {
