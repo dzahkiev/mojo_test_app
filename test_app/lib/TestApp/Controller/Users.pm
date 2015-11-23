@@ -24,21 +24,25 @@ sub form {
   my $params      = $self->req->params->to_hash;
   my $validator   = Mojolicious::Validator->new;
   my $validation  = $validator->validation;
+
   if ( $self->param( 'submit' ) ) {
     my $upload    = $self->req->upload( 'uploadImage' );
     my $filename  = $upload->filename;
     $params->{img}= $filename;
     $validation->input( $params );
+
     $validation->required( 'email'    )->like( qr/^([a-z0-9_-]+\.*)*@[a-z0-9_-]+\.[a-z]{2,6}$/i );
     $validation->required( 'password' )->like( qr/^[a-z0-9]{6,}$/i );
     $validation->required( 'name'     )->like( qr/^[a-z]{4,20}$/i );
     $validation->required( 'created'  )->like( qr/^(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})$/i );
     $validation->optional( 'img'      )->like( qr/\.(?:jpe?g|png)$/i );
+
     %$val_fields = map { $_ => 1 } @{$validation->passed};
     my $valid    = ! $validation->has_error;
     $valid = $val_fields->{email} = 0 if ( exists_email( $self, $params->{email} ) && !$id );
     if ( $valid ) {
-      my $query = "insert into users set name = ?, email = ?, pass = MD5(?), sex = ?, money = ?, created = ?  on duplicate key update name = values(name), email = values(email), pass = values(pass), sex = values(sex), money = values(money), created = values(created)";
+      my $query = "insert into users set name = ?, email = ?, pass = MD5(?), sex = ?, money = ?, created = ?
+       on duplicate key update name = values(name), email = values(email), pass = values(pass), sex = values(sex), money = values(money), created = values(created)";
       my @values = @$params{name, email, password, sex, money, created};
       my $res = $self->execute_qw( $query, @values);
       my $message;

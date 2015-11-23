@@ -1,5 +1,4 @@
 use base Mojolicious -strict;
-
 use Test::More;
 use Test::Mojolicious;
 
